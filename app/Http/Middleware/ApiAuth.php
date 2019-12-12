@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\User;
+use Illuminate\Support\Str;
 
 class ApiAuth
 {
@@ -16,7 +17,9 @@ class ApiAuth
      */
     public function handle($request, Closure $next)
     {
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
+        $token = Str::substr($token, 7);
+        
 
         $user = User::where('api_token', $token)->first();
 

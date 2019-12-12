@@ -42,6 +42,8 @@ class Auth extends Controller
               
         }
 
+        $token = Str::substr($token, 7);
+
         $data = User::where(['phone' => $request->phone])->first();
         if (Hash::check($request->password, $data->password)) {
             $data->api_token = Str::random(80);
@@ -60,7 +62,7 @@ class Auth extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
         $user = User::where('api_token', $token)->first();
         $user->api_token = '';
         $user->save();
