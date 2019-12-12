@@ -60,10 +60,11 @@ class Auth extends Controller
 
     public function logout(Request $request)
     {
-        $data = User::where(['api_token' => $request->token])->first();
-        $data->api_token = "";
-        $data->save();
-        return response()->json('Вышоол', 200);
+        $token = $request->header('token');
+        $user = User::where('api_token', $token)->first();
+        $user->api_token = '';
+        $user->save();
+        return response()->json([], 200);
        
     }
 
