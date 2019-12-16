@@ -24,3 +24,5 @@ Route::post('/login', 'Auth@login');
 Route::post('/logout', 'Auth@logout')->middleware('apiAuth');
 
 Route::get('/user','Auth@user')->middleware('apiAuth');
+
+Route::post('/photo', 'PhotoController@store');
