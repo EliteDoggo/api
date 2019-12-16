@@ -107,14 +107,21 @@ class Auth extends Controller
 
 
     public function user(Request $request){
-        
-        $user = User::select('id', 'first_name', 'surname', 'phone')
-                    ->where('first_name', 'like', '%'.$request->search.'%')
-                    ->orWhere('surname', 'like', '%'.$request->search.'%')
-                    ->orWhere('phone', 'like', '%'.$request->search.'%')
-                    ->get();
 
-        return response()->json($user, 200);
+        $s = explode(' ', $request->search);
+
+        $user = User::select('id', 'first_name', 'surname', 'phone');
+
+        for ($i=0; $i < count($s); $i++) {
+            
+            $user->orWhere('first_name', 'like', '%'.$s[$i].'%')
+                    ->orWhere('surname', 'like', '%'.$s[$i].'%')
+                    ->orWhere('phone', 'like', '%'.$s[$i].'%');
+        }
+
+        return response()->json($user->get(), 200);
+
+
 
     }
 
