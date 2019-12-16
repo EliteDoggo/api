@@ -42,7 +42,7 @@ class Auth extends Controller
               
         }
 
-        $token = Str::substr($token, 7);
+        $token = Str::substr($request->api_token, 7);
 
         $data = User::where(['phone' => $request->phone])->first();
         if (Hash::check($request->password, $data->password)) {
@@ -102,6 +102,19 @@ class Auth extends Controller
 
         ],201);
 
+
+    }
+
+
+    public function user(Request $request){
+        
+        $user = User::select('id', 'first_name', 'surname', 'phone')
+                    ->where('first_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('surname', 'like', '%'.$request->search.'%')
+                    ->orWhere('phone', 'like', '%'.$request->search.'%')
+                    ->get();
+
+        return response()->json($user, 200);
 
     }
 

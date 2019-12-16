@@ -18,10 +18,16 @@ class ApiAuth
     public function handle($request, Closure $next)
     {
         $token = $request->header('Authorization');
-        $token = Str::substr($token, 7);
-        
+        // $token = Str::substr($token, 7);
+
+        if (!$token) {
+            return response()->json([
+                'message'=> 'you need authorization'
+            ], 403);
+        }
 
         $user = User::where('api_token', $token)->first();
+
 
         if (!$user) {
             return response()->json([
@@ -31,4 +37,5 @@ class ApiAuth
 
         return $next($request);
     }
+
 }
