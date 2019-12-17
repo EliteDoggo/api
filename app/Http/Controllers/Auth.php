@@ -102,7 +102,6 @@ class Auth extends Controller
 
         ],201);
 
-
     }
 
 

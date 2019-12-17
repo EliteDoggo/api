@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Photo;
+use App\AllowedPhotos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -39,13 +40,10 @@ class PhotoController extends Controller
     public function store(Request $request)
     {
         $v = Validator::make(
-            $request->all(),
-            ['photo'=>
-            'required|image|mimes:jpg,jpeg,png']
+            $request->all(),['photo'=>'required|image|mimes:jpg,jpeg,png']
         );
         if ($v->fails()) {
-            return response()
-                    ->json($v->messages(), 422);
+            return response()->json($v->messages(), 422);
         }
         $name = time().'.'.$request->photo->extension();
         $url = url('images/'.$name);
@@ -53,7 +51,7 @@ class PhotoController extends Controller
             public_path('images'),
             $name
         );
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
         $user = User::where('api_token', $token)->first();
         $photo = new Photo;
         $photo->name = 'Untitled'; 
@@ -73,9 +71,28 @@ class PhotoController extends Controller
      * @param  \App\Photo  $photo
      * @return \Illuminate\Http\Response
      */
-    public function show(Photo $photo)
+    public function show($id, Request $request)
     {
-        //
+        return response()->json(Photo::find($id)->users);
+
+
+        $token = $request->header('Authorization');
+        $allowedPhotos = AllowedPhotos::all();
+        $user = User::where('api_token', $token)->first();
+        $photo = new Photo;
+        $photo = Photo::all();
+        
+
+        $url = url('images/');
+        $photo->url = $url;
+        $photo->owner_id = $user->id;
+        
+               
+
+        return response()->json([
+            'user' => $user->$allowedPhotos->$photo
+        ]);
+        // return response()->json($photo);
     }
 
     /**

@@ -13,7 +13,7 @@ class CreatePhotoTable extends Migration
      */
     public function up()
     {
-        Schema::create('photo', function (Blueprint $table) {
+        Schema::create('photos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',256);
             $table->string('url',512);
@@ -30,6 +30,6 @@ class CreatePhotoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('photo');
+        Schema::dropIfExists('photos');
     }
 }
